@@ -119,10 +119,8 @@ function _Home() {
         className={styles.sidebar + ` ${showSideBar && styles["sidebar-show"]}`}
       >
         <div className={styles["sidebar-header"]}>
-          <div className={styles["sidebar-title"]}>ChatGPT Next</div>
-          <div className={styles["sidebar-sub-title"]}>
-            Build your own AI assistant.
-          </div>
+          <div className={styles["sidebar-title"]}>ChatGPT For Enterprise</div>
+          <div className={styles["sidebar-sub-title"]}></div>
           <div className={styles["sidebar-logo"]}>
             <ChatGptIcon />
           </div>
@@ -146,21 +144,21 @@ function _Home() {
                 onClick={chatStore.deleteSession}
               />
             </div>
-            <div className={styles["sidebar-action"]}>
-              <IconButton
-                icon={<SettingsIcon />}
-                onClick={() => {
-                  setOpenSettings(true);
-                  setShowSideBar(false);
-                }}
-                shadow
-              />
-            </div>
-            <div className={styles["sidebar-action"]}>
-              <a href={REPO_URL} target="_blank">
-                <IconButton icon={<GithubIcon />} shadow />
-              </a>
-            </div>
+            {/*<div className={styles["sidebar-action"]}>*/}
+            {/*  <IconButton*/}
+            {/*    icon={<SettingsIcon />}*/}
+            {/*    onClick={() => {*/}
+            {/*      setOpenSettings(true);*/}
+            {/*      setShowSideBar(false);*/}
+            {/*    }}*/}
+            {/*    shadow*/}
+            {/*  />*/}
+            {/*</div>*/}
+            {/*<div className={styles["sidebar-action"]}>*/}
+            {/*  <a href={REPO_URL} target="_blank">*/}
+            {/*    <IconButton icon={<GithubIcon />} shadow />*/}
+            {/*  </a>*/}
+            {/*</div>*/}
           </div>
           <div>
             <IconButton
