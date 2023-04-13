@@ -10,11 +10,30 @@ import {
   MouseEventHandler,
 } from "react";
 
+async function test() {
+  try {
+    const res = await fetch("/api/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: "{}",
+    });
+
+    if (res.ok) {
+      window.location.href = "/";
+    }
+  } catch (err) {
+    console.error("NetWork Error", err);
+  }
+}
+
 export default function FirstPost() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
+    test();
     // 处理登录逻辑
   };
 

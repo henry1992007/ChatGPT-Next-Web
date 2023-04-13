@@ -24,6 +24,7 @@ import { Chat } from "./chat";
 import dynamic from "next/dynamic";
 import { REPO_URL } from "../constant";
 import { ErrorBoundary } from "./error";
+import Cookies from "js-cookie";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -139,7 +140,9 @@ function _Home() {
     ],
   );
   const chatStore = useChatStore();
-  const loading = !useHasHydrated();
+  const checkingSession = useCheckSession();
+  const useHasHydrated_ = useHasHydrated();
+  const loading = checkingSession || !useHasHydrated_;
   const [showSideBar, setShowSideBar] = useState(true);
 
   // setting
@@ -255,7 +258,7 @@ export function Home() {
   );
 }
 
-async function validateSession(str: sessionId) {
+async function validateSession(sessionId: string) {
   // 根据你的API调用实现验证逻辑，此处为示例代码
   const response = await fetch("https://your-api-url/validate-session", {
     method: "POST",
@@ -279,7 +282,7 @@ function useCheckSession() {
     (async () => {
       const sessionId = Cookies.get("sessionId");
       if (!sessionId) {
-        window.location.href = "/login"; // 重定向到登录URL
+        window.location.href = "/user/login"; // 重定向到登录URL
       } else {
         const isValid = await validateSession(sessionId);
         if (!isValid) {
