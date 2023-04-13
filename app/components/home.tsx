@@ -2,13 +2,7 @@
 
 require("../polyfill");
 
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  MouseEventHandler,
-} from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { IconButton } from "./button";
 import styles from "./home.module.scss";
@@ -23,14 +17,13 @@ import LoadingIcon from "../icons/three-dots.svg";
 import CloseIcon from "../icons/close.svg";
 
 import { useChatStore } from "../store";
-import { isMobileScreen } from "../utils";
+import { getCSSVar, isMobileScreen } from "../utils";
 import Locale from "../locales";
 import { Chat } from "./chat";
 
 import dynamic from "next/dynamic";
 import { REPO_URL } from "../constant";
 import { ErrorBoundary } from "./error";
-import { useDebounce } from "use-debounce";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -73,9 +66,7 @@ function useSwitchTheme() {
       metaDescriptionDark?.setAttribute("content", "#151515");
       metaDescriptionLight?.setAttribute("content", "#fafafa");
     } else {
-      const themeColor = getComputedStyle(document.body)
-        .getPropertyValue("--theme-color")
-        .trim();
+      const themeColor = getCSSVar("--themeColor");
       metaDescriptionDark?.setAttribute("content", themeColor);
       metaDescriptionLight?.setAttribute("content", themeColor);
     }
@@ -262,4 +253,43 @@ export function Home() {
       <_Home></_Home>
     </ErrorBoundary>
   );
+}
+
+async function validateSession(str: sessionId) {
+  // 根据你的API调用实现验证逻辑，此处为示例代码
+  const response = await fetch("https://your-api-url/validate-session", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ sessionId }),
+  });
+
+  if (response.status === 200) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function useCheckSession() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const sessionId = Cookies.get("sessionId");
+      if (!sessionId) {
+        window.location.href = "/login"; // 重定向到登录URL
+      } else {
+        const isValid = await validateSession(sessionId);
+        if (!isValid) {
+          window.location.href = "/login"; // 重定向到登录URL
+        } else {
+          setLoading(false);
+        }
+      }
+    })();
+  }, []);
+
+  return loading;
 }

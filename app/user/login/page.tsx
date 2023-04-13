@@ -1,5 +1,7 @@
 "use client";
 
+import styles from "./login.module.scss";
+
 import {
   useState,
   useEffect,
@@ -12,26 +14,30 @@ export default function FirstPost() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // onLogin(phoneNumber, password);
+  const handleLogin = () => {
+    // 处理登录逻辑
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className={styles.loginContainer}>
+      <h1 className={styles.title}>ChatGTP for Enterprise</h1>
       <input
         type="tel"
-        placeholder="手机号"
+        className={styles.input}
+        placeholder="请输入手机号"
         value={phoneNumber}
-        onChange={(event) => setPhoneNumber(event.target.value)}
+        onChange={(e) => setPhoneNumber(e.target.value)}
       />
       <input
         type="password"
-        placeholder="密码"
+        className={styles.input}
+        placeholder="请输入密码"
         value={password}
-        onChange={(event) => setPassword(event.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
       />
-      <button type="submit">登录</button>
-    </form>
+      <button className={styles.loginButton} onClick={handleLogin}>
+        登录
+      </button>
+    </div>
   );
 }
