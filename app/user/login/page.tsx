@@ -1,8 +1,8 @@
 "use client";
 
 import styles from "./login.module.scss";
-// const Cookies = require('js-cookie')
-import Cookies from "js-cookie";
+const Cookies = require("js-cookie");
+// import Cookies from "js-cookie";
 
 import {
   useState,
@@ -12,7 +12,7 @@ import {
   MouseEventHandler,
 } from "react";
 
-async function login(req) {
+async function login(req: { phone: string; pwd: string }) {
   try {
     const response = await fetch("/api/proxy", {
       method: "POST",

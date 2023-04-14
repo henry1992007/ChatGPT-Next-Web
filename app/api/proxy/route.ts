@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requestOpenai } from "../common";
-import Cookies from "js-cookie";
 import { Headers } from "node-fetch";
 
 async function makeRequest(req: NextRequest) {
   try {
     const serverPath = req.headers.get("path");
-    let path = serverPath.startsWith("/") ? serverPath : "/" + serverPath;
+    let path = serverPath?.startsWith("/") ? serverPath : "/" + serverPath;
     path += path.indexOf("?") > -1 ? "&t=" + Date.now() : "?t=" + Date.now();
     const proxyResult = await fetch(`http://172.31.4.115:7817${path}`, {
       headers: req.headers,
