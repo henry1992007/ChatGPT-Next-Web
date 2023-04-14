@@ -8,6 +8,7 @@ async function makeRequest(req: NextRequest) {
     let path = serverPath?.startsWith("/") ? serverPath : "/" + serverPath;
     path += path.indexOf("?") > -1 ? "&t=" + Date.now() : "?t=" + Date.now();
     const proxyResult = await fetch(`http://172.31.4.115:7817${path}`, {
+      // const proxyResult = await fetch(`http://127.0.0.1:7817${path}`, {
       headers: req.headers,
       method: req.method,
       body: req.body,

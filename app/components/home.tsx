@@ -290,11 +290,10 @@ async function validateSession(sessionId: string) {
     },
   });
 
-  debugger;
   if (response.ok) {
     let res = await response.json();
     if (res.success) {
-      Cookies.set("sessionId", res.data.sessionId);
+      // display phone res.data.phone
       return true;
     }
   }
