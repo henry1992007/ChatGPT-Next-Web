@@ -258,23 +258,6 @@ export function Home() {
   );
 }
 
-async function validateSession(sessionId: string) {
-  // 根据你的API调用实现验证逻辑，此处为示例代码
-  const response = await fetch("https://your-api-url/validate-session", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ sessionId }),
-  });
-
-  if (response.status === 200) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 function useCheckSession() {
   const [loading, setLoading] = useState(true);
 
@@ -286,7 +269,7 @@ function useCheckSession() {
       } else {
         const isValid = await validateSession(sessionId);
         if (!isValid) {
-          window.location.href = "/login"; // 重定向到登录URL
+          window.location.href = "/user/login"; // 重定向到登录URL
         } else {
           setLoading(false);
         }
@@ -295,4 +278,25 @@ function useCheckSession() {
   }, []);
 
   return loading;
+}
+
+async function validateSession(sessionId: string) {
+  const response = await fetch("/api/proxy", {
+    method: "POST",
+    headers: {
+      path: "/user/checkLogin",
+      "Content-Type": "application/json",
+    },
+  });
+
+  debugger;
+  if (response.ok) {
+    let res = await response.json();
+    if (res.success) {
+      Cookies.set("sessionId", res.data.sessionId);
+      return true;
+    }
+  }
+
+  return false;
 }

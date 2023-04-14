@@ -1,6 +1,8 @@
 "use client";
 
 import styles from "./login.module.scss";
+// const Cookies = require('js-cookie')
+import Cookies from "js-cookie";
 
 import {
   useState,
@@ -10,19 +12,27 @@ import {
   MouseEventHandler,
 } from "react";
 
-async function test() {
+async function login(req) {
   try {
-    const res = await fetch("/api/user/login", {
+    const response = await fetch("/api/proxy", {
       method: "POST",
       headers: {
+        path: "user/login",
         "Content-Type": "application/json",
       },
-      body: "{}",
+      body: JSON.stringify(req),
     });
 
-    if (res.ok) {
-      window.location.href = "/";
+    if (response.ok) {
+      let res = await response.json();
+      console.log(res);
+      if (res.success) {
+        Cookies.set("sessionId", res.data.sessionId);
+        window.location.href = "/";
+      }
     }
+
+    return response;
   } catch (err) {
     console.error("NetWork Error", err);
   }
@@ -32,9 +42,8 @@ export default function FirstPost() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    test();
-    // 处理登录逻辑
+  const handleLogin = async () => {
+    const response = await login({ phone: phoneNumber, pwd: password });
   };
 
   return (
