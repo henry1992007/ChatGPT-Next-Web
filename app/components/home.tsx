@@ -24,7 +24,6 @@ import { Chat } from "./chat";
 import dynamic from "next/dynamic";
 import { REPO_URL } from "../constant";
 import { ErrorBoundary } from "./error";
-// import Cookies from "js-cookie";
 const Cookies = require("js-cookie");
 
 export function Loading(props: { noLogo?: boolean }) {
