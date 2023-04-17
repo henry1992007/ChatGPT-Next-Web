@@ -9,7 +9,8 @@ export async function proxy(req: NextRequest) {
   console.log("bodyStr", bodyStr);
 
   // const proxyResult = await fetch(`http://172.31.4.115:7817${path}`, {
-  return fetch(`http://127.0.0.1:7817${path}`, {
+  return fetch(`http://172.31.4.115:7817${path}`, {
+    // return fetch(`http://127.0.0.1:7817${path}`, {
     headers: {
       "Content-Type": "application/json",
       Cookie: req.headers.get("Cookie") || "",
