@@ -12,7 +12,7 @@ export async function proxy(req: NextRequest) {
   return fetch(`http://127.0.0.1:7817${path}`, {
     headers: {
       "Content-Type": "application/json",
-      Cookie: req.headers.get("Cookie"),
+      Cookie: req.headers.get("Cookie") || "",
     },
     method: req.method,
     body: bodyStr,
