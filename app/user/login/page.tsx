@@ -22,7 +22,7 @@ export default function FirstPost() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/proxy", {
+      const response = await fetch("/api/backend", {
         method: "POST",
         headers: {
           path: "user/login",
@@ -52,7 +52,7 @@ export default function FirstPost() {
   const handleChangePwd = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/proxy", {
+      const response = await fetch("/api/backend", {
         method: "POST",
         headers: {
           path: "/user/updatePwd",

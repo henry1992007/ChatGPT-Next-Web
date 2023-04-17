@@ -281,7 +281,7 @@ function useCheckSession() {
 }
 
 async function validateSession(sessionId: string) {
-  const response = await fetch("/api/proxy", {
+  const response = await fetch("/api/backend", {
     method: "POST",
     headers: {
       path: "/user/checkLogin",

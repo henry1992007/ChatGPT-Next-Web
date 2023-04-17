@@ -1,19 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requestOpenai } from "../common";
-import { Headers } from "node-fetch";
+import { proxy } from "../proxyBackend";
 
 async function makeRequest(req: NextRequest) {
   try {
-    const serverPath = req.headers.get("path");
-    let path = serverPath?.startsWith("/") ? serverPath : "/" + serverPath;
-    path += path.indexOf("?") > -1 ? "&t=" + Date.now() : "?t=" + Date.now();
-    const proxyResult = await fetch(`http://172.31.4.115:7817${path}`, {
-      // const proxyResult = await fetch(`http://127.0.0.1:7817${path}`, {
-      headers: req.headers,
-      method: req.method,
-      body: req.body,
-    });
-
+    const proxyResult = await proxy(req);
     const res = new NextResponse(proxyResult.body);
     res.headers.set("Content-Type", "application/json");
     res.headers.set("Cache-Control", "no-cache");
@@ -39,3 +29,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   return makeRequest(req);
 }
+//
+// export const config = {
+//   runtime: "edge",
+// };
