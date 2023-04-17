@@ -3931,7 +3931,7 @@ natural-compare@^1.4.0:
 
 next@^13.3.0:
   version "13.3.0"
-  resolved "https://registry.npmmirror.com/next/-/next-13.3.0.tgz#40632d303d74fc8521faa0a5bf4a033a392749b1"
+  resolved "https://registry.yarnpkg.com/next/-/next-13.3.0.tgz#40632d303d74fc8521faa0a5bf4a033a392749b1"
   integrity sha512-OVTw8MpIPa12+DCUkPqRGPS3thlJPcwae2ZL4xti3iBff27goH024xy4q2lhlsdoYiKOi8Kz6uJoLW/GXwgfOA==
   dependencies:
     "@next/env" "13.3.0"
