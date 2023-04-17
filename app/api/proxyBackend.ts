@@ -6,7 +6,6 @@ export async function proxy(req: NextRequest) {
   path += path.indexOf("?") > -1 ? "&t=" + Date.now() : "?t=" + Date.now();
 
   let bodyStr = await readStream(req.body);
-  console.log("bodyStr", bodyStr);
 
   // const proxyResult = await fetch(`http://172.31.4.115:7817${path}`, {
   return fetch(`http://172.31.4.115:7817${path}`, {
