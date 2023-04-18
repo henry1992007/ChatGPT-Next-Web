@@ -136,7 +136,7 @@ const DEFAULT_CONFIG: ChatConfig = {
   historyMessageCount: 4,
   compressMessageLengthThreshold: 1000,
   sendBotMessages: true as boolean,
-  submitKey: SubmitKey.CtrlEnter as SubmitKey,
+  submitKey: SubmitKey.Enter as SubmitKey,
   avatar: "1f603",
   fontSize: 14,
   theme: Theme.Auto as Theme,
@@ -421,7 +421,7 @@ export const useChatStore = create<ChatStore>()(
           },
           onError(error, statusCode) {
             if (statusCode === 401) {
-              botMessage.content = Locale.Error.Unauthorized;
+              botMessage.content += "\n";
             } else if (!error.message.includes("aborted")) {
               botMessage.content += "\n\n" + Locale.Store.Error;
             }
@@ -430,6 +430,9 @@ export const useChatStore = create<ChatStore>()(
             botMessage.isError = true;
             set(() => ({}));
             ControllerPool.remove(sessionIndex, botMessage.id ?? messageIndex);
+            if (statusCode === 401) {
+              window.location.href = "/user/login";
+            }
           },
           onController(controller) {
             // collect controller for stop/retry
@@ -558,8 +561,11 @@ export const useChatStore = create<ChatStore>()(
                   session.lastSummarizeIndex = lastSummarizeIndex;
                 }
               },
-              onError(error) {
+              onError(error, statusCode) {
                 console.error("[Summarize] ", error);
+                if (statusCode === 401) {
+                  window.location.href = "/user/login";
+                }
               },
             },
           );

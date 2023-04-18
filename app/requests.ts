@@ -1,6 +1,7 @@
 import type { ChatRequest, ChatResponse } from "./api/openai/typing";
 import { Message, ModelConfig, useAccessStore, useChatStore } from "./store";
 import { showToast } from "./components/ui-lib";
+import fingerprint from "@fingerprintjs/fingerprintjs";
 
 const TIME_OUT_MS = 60000;
 
@@ -49,13 +50,14 @@ function getHeaders() {
 }
 
 export function requestOpenaiClient(path: string) {
-  return (body: any, method = "POST") =>
+  return async (body: any, method = "POST") =>
     fetch("/api/openai?_vercel_no_cache=1", {
       method,
       headers: {
         "Content-Type": "application/json",
         path,
         ...getHeaders(),
+        fp: (await (await fingerprint.load()).get()).visitorId,
       },
       body: body && JSON.stringify(body),
     });
@@ -151,6 +153,7 @@ export async function requestChatStream(
         "Content-Type": "application/json",
         path: "v1/chat/completions",
         ...getHeaders(),
+        fp: (await (await fingerprint.load()).get()).visitorId,
       },
       body: JSON.stringify(req),
       signal: controller.signal,

@@ -1,5 +1,7 @@
 "use client";
 
+import fingerprint from "@fingerprintjs/fingerprintjs";
+
 require("../polyfill");
 
 import { useState, useEffect, useRef } from "react";
@@ -195,16 +197,16 @@ function _Home() {
                 onClick={chatStore.deleteSession}
               />
             </div>
-            {/*<div className={styles["sidebar-action"]}>*/}
-            {/*  <IconButton*/}
-            {/*    icon={<SettingsIcon />}*/}
-            {/*    onClick={() => {*/}
-            {/*      setOpenSettings(true);*/}
-            {/*      setShowSideBar(false);*/}
-            {/*    }}*/}
-            {/*    shadow*/}
-            {/*  />*/}
-            {/*</div>*/}
+            <div className={styles["sidebar-action"]}>
+              <IconButton
+                icon={<SettingsIcon />}
+                onClick={() => {
+                  setOpenSettings(true);
+                  setShowSideBar(false);
+                }}
+                shadow
+              />
+            </div>
             {/*<div className={styles["sidebar-action"]}>*/}
             {/*  <a href={REPO_URL} target="_blank">*/}
             {/*    <IconButton icon={<GithubIcon />} shadow />*/}
@@ -286,6 +288,7 @@ async function validateSession(sessionId: string) {
     headers: {
       path: "/user/checkLogin",
       "Content-Type": "application/json",
+      fp: (await (await fingerprint.load()).get()).visitorId,
     },
   });
 

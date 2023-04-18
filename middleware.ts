@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerSideConfig } from "./app/config/server";
+import {NextRequest, NextResponse} from "next/server";
+import {getServerSideConfig} from "./app/config/server";
 import md5 from "spark-md5";
+import {proxy} from "./app/api/proxyBackend";
 
 export const config = {
   matcher: ["/api/openai", "/api/chat-stream"],
@@ -19,8 +20,29 @@ function getIP(req: NextRequest) {
   return ip;
 }
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
+  const checkLoginReq = new NextRequest(req.url, {
+    body: "",
+    method: "POST",
+    headers: {
+      path: "/user/checkLogin",
+      "Content-Type": "application/json",
+      Cookie: req.headers.get("Cookie") || "",
+      fp: req.headers.get("fp") || ""
+    },
+  });
 
+  const checkLoginReqResponse = await proxy(checkLoginReq);
+  const resp = !checkLoginReqResponse.ok ? {} : await checkLoginReqResponse.json();
+  if (!resp.success) {
+    console.log(resp)
+    return NextResponse.json(
+      resp,
+      {
+        status: 401,
+      },
+    );
+  }
 
   const accessCode = req.headers.get("access-code");
   const token = req.headers.get("token");

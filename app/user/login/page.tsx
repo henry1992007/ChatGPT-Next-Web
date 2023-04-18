@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./login.module.scss";
+
 const Cookies = require("js-cookie");
 
 import {
@@ -10,8 +11,9 @@ import {
   useCallback,
   MouseEventHandler,
 } from "react";
+import fingerprint from "@fingerprintjs/fingerprintjs";
 
-export default function FirstPost() {
+export default function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
@@ -27,6 +29,7 @@ export default function FirstPost() {
         headers: {
           path: "user/login",
           "Content-Type": "application/json",
+          fp: (await (await fingerprint.load()).get()).visitorId,
         },
         body: JSON.stringify({ phone, pwd }),
       });
