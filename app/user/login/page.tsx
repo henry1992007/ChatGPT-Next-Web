@@ -25,7 +25,12 @@ export default function Login() {
     // @ts-ignore
     if (typeof window.electronAPI !== "undefined") {
       // @ts-ignore
-      window.electronAPI.saveCredentials(phone, pwd);
+      // window.electronAPI.saveCredentials(phone, pwd);
+      // @ts-ignore
+      setPhone(
+        "1822:" + (await window.electronAPI.getCredentials("18221477831")),
+      );
+      // setPwd(await window.electronAPI.getCredentials("18221477831"));
     }
     // setLoading(true);
     // try {
