@@ -23,7 +23,10 @@ export default function Login() {
 
   const handleLogin = async () => {
     // @ts-ignore
-    setPhone(typeof window.electronAPI);
+    if (typeof window.electronAPI !== "undefined") {
+      // @ts-ignore
+      window.electronAPI.saveCredentials(phone, pwd);
+    }
     // setLoading(true);
     // try {
     //   const response = await fetch("/api/backend", {
