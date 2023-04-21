@@ -23,7 +23,8 @@ export default function Login() {
 
   const handleLogin = async () => {
     // @ts-ignore
-    setPhone(window.electronAPI);
+    setPhone(typeof window);
+    // setPhone(window.electronAPI);
     // setLoading(true);
     // try {
     //   const response = await fetch("/api/backend", {
