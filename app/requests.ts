@@ -1,5 +1,11 @@
 import type { ChatRequest, ChatResponse } from "./api/openai/typing";
-import { Message, ModelConfig, useAccessStore, useChatStore } from "./store";
+import {
+  Message,
+  ModelConfig,
+  ModelType,
+  useAccessStore,
+  useChatStore,
+} from "./store";
 import { showToast } from "./components/ui-lib";
 import fingerprint from "@fingerprintjs/fingerprintjs";
 
@@ -10,6 +16,7 @@ const makeRequestParam = (
   options?: {
     filterBot?: boolean;
     stream?: boolean;
+    model?: ModelType;
   },
 ): ChatRequest => {
   let sendMessages = messages.map((v) => ({
@@ -26,6 +33,11 @@ const makeRequestParam = (
   // @yidadaa: wont send max_tokens, because it is nonsense for Muggles
   // @ts-expect-error
   delete modelConfig.max_tokens;
+
+  // override model config
+  if (options?.model) {
+    modelConfig.model = options.model;
+  }
 
   return {
     messages: sendMessages,
@@ -51,7 +63,7 @@ function getHeaders() {
 
 export function requestOpenaiClient(path: string) {
   return async (body: any, method = "POST") =>
-    fetch("/api/openai?_vercel_no_cache=1", {
+    fetch("/api/openai", {
       method,
       headers: {
         "Content-Type": "application/json",
@@ -63,8 +75,16 @@ export function requestOpenaiClient(path: string) {
     });
 }
 
-export async function requestChat(messages: Message[]) {
-  const req: ChatRequest = makeRequestParam(messages, { filterBot: true });
+export async function requestChat(
+  messages: Message[],
+  options?: {
+    model?: ModelType;
+  },
+) {
+  const req: ChatRequest = makeRequestParam(messages, {
+    filterBot: true,
+    model: options?.model,
+  });
 
   const res = await requestOpenaiClient("v1/chat/completions")(req);
 
@@ -207,7 +227,13 @@ export async function requestChatStream(
   }
 }
 
-export async function requestWithPrompt(messages: Message[], prompt: string) {
+export async function requestWithPrompt(
+  messages: Message[],
+  prompt: string,
+  options?: {
+    model?: ModelType;
+  },
+) {
   messages = messages.concat([
     {
       role: "user",
@@ -216,7 +242,7 @@ export async function requestWithPrompt(messages: Message[], prompt: string) {
     },
   ]);
 
-  const res = await requestChat(messages);
+  const res = await requestChat(messages, options);
 
   return res?.choices?.at(0)?.message?.content ?? "";
 }

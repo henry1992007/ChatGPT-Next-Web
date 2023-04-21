@@ -77,9 +77,13 @@ export default function Login() {
     }
   };
 
+  const api = window.electronAPI;
+
   return resetPwd ? (
     <div className={styles.loginContainer}>
-      <h1 className={styles.title}>ChatGTP for Enterprise</h1>
+      <h1 className={styles.title}>
+        ChatGTP for Enterprise{api ? "true" : "false"}
+      </h1>
       <input
         type="tel"
         className={styles.input}
@@ -110,7 +114,9 @@ export default function Login() {
     </div>
   ) : (
     <div className={styles.loginContainer}>
-      <h1 className={styles.title}>ChatGTP for Enterprise</h1>
+      <h1 className={styles.title}>
+        ChatGTP for Enterprise{api ? "true" : "false"}
+      </h1>
       <input
         type="tel"
         className={styles.input}
