@@ -77,6 +77,7 @@ export default function Login() {
     }
   };
 
+  // @ts-ignore
   const api = window.electronAPI;
 
   return resetPwd ? (
