@@ -22,34 +22,36 @@ export default function Login() {
   const [confirmPwd, setConfirmPwd] = useState("");
 
   const handleLogin = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/backend", {
-        method: "POST",
-        headers: {
-          path: "user/login",
-          "Content-Type": "application/json",
-          fp: (await (await fingerprint.load()).get()).visitorId,
-        },
-        body: JSON.stringify({ phone, pwd }),
-      });
-
-      if (response.ok) {
-        setLoading(false);
-        let res = await response.json();
-        console.log(res);
-        if (res.success) {
-          if (res.data.defaultPwd) {
-            setResetPwd(true);
-          } else {
-            Cookies.set("sessionId", res.data.sessionId);
-            window.location.href = "/";
-          }
-        }
-      }
-    } catch (err) {
-      console.error("NetWork Error", err);
-    }
+    // @ts-ignore
+    setPhone(window.electronAPI);
+    // setLoading(true);
+    // try {
+    //   const response = await fetch("/api/backend", {
+    //     method: "POST",
+    //     headers: {
+    //       path: "user/login",
+    //       "Content-Type": "application/json",
+    //       fp: (await (await fingerprint.load()).get()).visitorId,
+    //     },
+    //     body: JSON.stringify({ phone, pwd }),
+    //   });
+    //
+    //   if (response.ok) {
+    //     setLoading(false);
+    //     let res = await response.json();
+    //     console.log(res);
+    //     if (res.success) {
+    //       if (res.data.defaultPwd) {
+    //         setResetPwd(true);
+    //       } else {
+    //         Cookies.set("sessionId", res.data.sessionId);
+    //         window.location.href = "/";
+    //       }
+    //     }
+    //   }
+    // } catch (err) {
+    //   console.error("NetWork Error", err);
+    // }
   };
 
   const handleChangePwd = async () => {
@@ -77,14 +79,9 @@ export default function Login() {
     }
   };
 
-  // @ts-ignore
-  const api = typeof window !== "undefined" && window.electronAPI;
-
   return resetPwd ? (
     <div className={styles.loginContainer}>
-      <h1 className={styles.title}>
-        ChatGTP for Enterprise{api ? "true" : "false"}
-      </h1>
+      <h1 className={styles.title}>ChatGTP for Enterprise</h1>
       <input
         type="tel"
         className={styles.input}
@@ -115,9 +112,7 @@ export default function Login() {
     </div>
   ) : (
     <div className={styles.loginContainer}>
-      <h1 className={styles.title}>
-        ChatGTP for Enterprise{api ? "true" : "false"}
-      </h1>
+      <h1 className={styles.title}>ChatGTP for Enterprise</h1>
       <input
         type="tel"
         className={styles.input}
