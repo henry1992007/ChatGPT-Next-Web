@@ -28,6 +28,7 @@ export default function Login() {
       // window.electronAPI.saveCredentials(phone, pwd);
       // @ts-ignore
       setPhone(
+        // @ts-ignore
         "18221:" + (await window.electronAPI.getCredentials("18221477831")),
       );
       // setPwd(await window.electronAPI.getCredentials("18221477831"));
