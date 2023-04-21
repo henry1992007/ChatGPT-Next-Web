@@ -78,7 +78,8 @@ export default function Login() {
   };
 
   // @ts-ignore
-  const api = window.electronAPI;
+  // const api = window.electronAPI;
+  const api = true;
 
   return resetPwd ? (
     <div className={styles.loginContainer}>
