@@ -424,6 +424,7 @@ export const useChatStore = create<ChatStore>()(
             }
           },
           onError(error, statusCode) {
+            debugger;
             if (statusCode === 401) {
               botMessage.content += "\n";
             } else if (!error.message.includes("aborted")) {

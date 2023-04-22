@@ -1,6 +1,8 @@
 "use client";
 
 import styles from "./login.module.scss";
+import { Loading } from "../../components/home";
+import electron from "@/app/electron";
 
 const Cookies = require("js-cookie");
 
@@ -17,50 +19,64 @@ export default function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
+  const [rememberPwd, setRememberPwd] = useState<boolean>(true);
   const [resetPwd, setResetPwd] = useState<boolean>(false);
   const [newPwd, setNewPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
 
+  useEffect(() => {
+    (async () => {
+      if (electron.electron) {
+        const account = await electron.readData("rememberedAccount");
+        console.log("account", account);
+        if (!!account) {
+          const password = (await electron.getCredentials(account)) as string;
+          if (!!password) {
+            setPhone(account);
+            setPwd(password);
+          }
+        }
+      }
+    })();
+  }, []);
+
   const handleLogin = async () => {
-    // @ts-ignore
-    if (typeof window.electronAPI !== "undefined") {
-      // @ts-ignore
-      // window.electronAPI.saveCredentials(phone, pwd);
-      // @ts-ignore
-      setPhone(
-        // @ts-ignore
-        "18221:" + (await window.electronAPI.getCredentials("18221477831")),
-      );
-      // setPwd(await window.electronAPI.getCredentials("18221477831"));
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/backend", {
+        method: "POST",
+        headers: {
+          path: "user/login",
+          "Content-Type": "application/json",
+          fp: (await (await fingerprint.load()).get()).visitorId,
+        },
+        body: JSON.stringify({ phone, pwd }),
+      });
+
+      if (response.ok) {
+        let res = await response.json();
+        if (res.success) {
+          if (res.data.defaultPwd) {
+            setResetPwd(true);
+            setLoading(false);
+          } else {
+            if (rememberPwd) {
+              await electron.saveCredentials(phone, pwd);
+              await electron.saveData("rememberedAccount", phone);
+            } else {
+              await electron.deleteCredentials(phone);
+              // await electron.saveData('rememberedAccount', null);
+            }
+            await electron.saveData("sessionId", res.data.sessionId);
+            Cookies.set("sessionId", res.data.sessionId);
+            window.location.href = "/";
+          }
+        }
+      }
+    } catch (err) {
+      console.error("NetWork Error", err);
     }
-    // setLoading(true);
-    // try {
-    //   const response = await fetch("/api/backend", {
-    //     method: "POST",
-    //     headers: {
-    //       path: "user/login",
-    //       "Content-Type": "application/json",
-    //       fp: (await (await fingerprint.load()).get()).visitorId,
-    //     },
-    //     body: JSON.stringify({ phone, pwd }),
-    //   });
-    //
-    //   if (response.ok) {
-    //     setLoading(false);
-    //     let res = await response.json();
-    //     console.log(res);
-    //     if (res.success) {
-    //       if (res.data.defaultPwd) {
-    //         setResetPwd(true);
-    //       } else {
-    //         Cookies.set("sessionId", res.data.sessionId);
-    //         window.location.href = "/";
-    //       }
-    //     }
-    //   }
-    // } catch (err) {
-    //   console.error("NetWork Error", err);
-    // }
   };
 
   const handleChangePwd = async () => {
@@ -87,6 +103,10 @@ export default function Login() {
       console.error("NetWork Error", err);
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return resetPwd ? (
     <div className={styles.loginContainer}>
@@ -136,6 +156,17 @@ export default function Login() {
         value={pwd}
         onChange={(e) => setPwd(e.target.value)}
       />
+      {electron.electron ? (
+        <div>
+          <input
+            id="exampleCheckbox"
+            type="checkbox"
+            checked={rememberPwd}
+            onChange={(e) => setRememberPwd(e.target.checked)}
+          />
+          <label htmlFor="exampleCheckbox">记住密码</label>
+        </div>
+      ) : null}
       <button
         className={styles.loginButton}
         onClick={handleLogin}

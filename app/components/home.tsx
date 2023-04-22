@@ -18,6 +18,7 @@ import { Chat } from "./chat";
 import dynamic from "next/dynamic";
 import { Path } from "../constant";
 import { ErrorBoundary } from "./error";
+
 const Cookies = require("js-cookie");
 
 import {
@@ -26,6 +27,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import electron from "@/app/electron";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -148,11 +150,17 @@ function useCheckSession() {
 
   useEffect(() => {
     (async () => {
+      if (electron.electron) {
+        let sid = await electron.readData("sessionId");
+        if (sid) {
+          Cookies.set("sessionId", sid);
+        }
+      }
       const sessionId = Cookies.get("sessionId");
       if (!sessionId) {
         window.location.href = "/user/login"; // 重定向到登录URL
       } else {
-        const isValid = await validateSession(sessionId);
+        const isValid = await validateSession();
         if (!isValid) {
           window.location.href = "/user/login"; // 重定向到登录URL
         } else {
@@ -165,7 +173,7 @@ function useCheckSession() {
   return loading;
 }
 
-async function validateSession(sessionId: string) {
+async function validateSession() {
   const response = await fetch("/api/backend", {
     method: "POST",
     headers: {
