@@ -28,7 +28,8 @@ export async function middleware(req: NextRequest) {
       path: "/user/checkLogin",
       "Content-Type": "application/json",
       Cookie: req.headers.get("Cookie") || "",
-      fp: req.headers.get("fp") || ""
+      fp: req.headers.get("fp") || "",
+      action: new URL(req.url).pathname
     },
   });
 
@@ -39,7 +40,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.json(
       resp,
       {
-        status: 401,
+        status: resp.code,
       },
     );
   }
@@ -69,7 +70,6 @@ export async function middleware(req: NextRequest) {
 
   // inject api key
   if (!token) {
-    console.log("401",serverConfig)
     const apiKey = serverConfig.apiKey;
     if (apiKey) {
       console.log("[Auth] set system token");

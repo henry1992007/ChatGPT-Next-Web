@@ -13,6 +13,7 @@ export async function proxy(req: NextRequest) {
       "Content-Type": "application/json",
       Cookie: req.headers.get("Cookie") || "",
       fp: req.headers.get("fp") || "",
+      action: req.headers.get("action") || "",
     },
     method: req.method,
     body: bodyStr,

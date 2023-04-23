@@ -283,6 +283,9 @@ export const useChatStore = create<ChatStore>()(
             debugger;
             if (statusCode === 401) {
               botMessage.content += "\n";
+            } else if (statusCode === 402) {
+              botMessage.content +=
+                "\n\n体验账号目前限制每小时15条消息，先歇会儿吧~";
             } else if (!error.message.includes("aborted")) {
               botMessage.content += "\n\n" + Locale.Store.Error;
             }
