@@ -4,14 +4,13 @@ import fingerprint from "@fingerprintjs/fingerprintjs";
 
 require("../polyfill");
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, StyleHTMLAttributes } from "react";
 
 import styles from "./home.module.scss";
 
 import BotIcon from "../icons/bot.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 
-import { useChatStore } from "../store";
 import { getCSSVar, useMobileScreen } from "../utils";
 import { Chat } from "./chat";
 
@@ -27,6 +26,8 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import { SideBar } from "./sidebar";
+import { useAppConfig } from "../store/config";
 import electron from "@/app/electron";
 
 export function Loading(props: { noLogo?: boolean }) {
@@ -42,12 +43,8 @@ const Settings = dynamic(async () => (await import("./settings")).Settings, {
   loading: () => <Loading noLogo />,
 });
 
-const SideBar = dynamic(async () => (await import("./sidebar")).SideBar, {
-  loading: () => <Loading noLogo />,
-});
-
 export function useSwitchTheme() {
-  const config = useChatStore((state) => state.config);
+  const config = useAppConfig();
 
   useEffect(() => {
     document.body.classList.remove("light");
@@ -88,7 +85,7 @@ const useHasHydrated = () => {
 };
 
 function WideScreen() {
-  const config = useChatStore((state) => state.config);
+  const config = useAppConfig();
 
   return (
     <div
