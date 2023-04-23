@@ -54,7 +54,6 @@ export async function middleware(req: NextRequest) {
   console.log("[User IP] ", getIP(req));
   console.log("[Time] ", new Date().toLocaleString());
 
-  console.log(token);
   if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !token) {
     return NextResponse.json(
       {

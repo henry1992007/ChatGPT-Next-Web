@@ -9,31 +9,37 @@ export default {
   getCredentials: async (account: string) => {
     const electron = getElectron();
     if (electron) {
-      return electron.getCredentials(account);
+      return await electron.getCredentials(account);
     }
   },
   saveCredentials: async (account: string, password: string) => {
     const electron = getElectron();
     if (electron) {
-      return electron.saveCredentials(account, password);
+      return await electron.saveCredentials(account, password);
     }
   },
   deleteCredentials: async (account: string) => {
     const electron = getElectron();
     if (electron) {
-      return electron.deleteCredentials(account);
+      return await electron.deleteCredentials(account);
     }
   },
   readData: async (key: string) => {
     const electron = getElectron();
     if (electron) {
-      return electron.readData(key);
+      return await electron.readData(key);
     }
   },
   saveData: async (key: string, value: string) => {
     const electron = getElectron();
     if (electron) {
-      return electron.saveData(key, value);
+      await electron.saveData(key, value);
+    }
+  },
+  deleteData: async (key: string) => {
+    const electron = getElectron();
+    if (electron) {
+      await electron.deleteData(key);
     }
   },
 };

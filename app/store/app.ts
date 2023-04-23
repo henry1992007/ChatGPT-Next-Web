@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 
 import { type ChatCompletionResponseMessage } from "openai";
 import {
@@ -12,6 +12,7 @@ import { isMobileScreen, trimTopic } from "../utils";
 import Locale from "../locales";
 import { showToast } from "../components/ui-lib";
 import { ModelType, useAppConfig } from "./config";
+import electron from "@/app/electron";
 
 export type Message = ChatCompletionResponseMessage & {
   date: string;
@@ -498,6 +499,25 @@ export const useChatStore = create<ChatStore>()(
 
         return state;
       },
+      storage: electron.electron
+        ? createJSONStorage(() => {
+            const st: StateStorage = {
+              getItem: async (name: string): Promise<string | null> => {
+                // console.log("getItem", name);
+                return await electron.readData(name);
+              },
+              setItem: async (name: string, value: string): Promise<void> => {
+                // console.log(name, 'with value', value, 'has been saved')
+                await electron.saveData(name, value);
+              },
+              removeItem: async (name: string): Promise<void> => {
+                // console.log(name, 'has been deleted')
+                await electron.deleteData(name);
+              },
+            };
+            return st;
+          })
+        : createJSONStorage(() => localStorage),
     },
   ),
 );
