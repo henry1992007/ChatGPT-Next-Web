@@ -10,9 +10,12 @@
     "lint": "next lint",
     "fetch": "node ./scripts/fetch-prompts.mjs",
     "prepare": "husky install",
-    "proxy-dev": "sh ./scripts/init-proxy.sh && proxychains -f ./scripts/proxychains.conf yarn dev"
+    "proxy-dev": "sh ./scripts/init-proxy.sh && proxychains -f ./scripts/proxychains.conf yarn dev",
+    "static": "yarn build && next export"
   },
   "dependencies": {
+    "@capacitor/core": "^4.7.3",
+    "@capacitor/ios": "^4.7.3",
     "@fingerprintjs/fingerprintjs": "^3.4.1",
     "@hello-pangea/dnd": "^16.2.0",
     "@svgr/webpack": "^6.5.1",
@@ -39,6 +42,7 @@
     "zustand": "^4.3.6"
   },
   "devDependencies": {
+    "@capacitor/cli": "^4.7.3",
     "@types/node": "^18.14.6",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
