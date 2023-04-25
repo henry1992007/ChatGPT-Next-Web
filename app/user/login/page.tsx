@@ -134,8 +134,7 @@ export default function Login() {
     return <Loading />;
   }
 
-  // return resetPwd ? (
-  return false ? (
+  return resetPwd ? (
     <div className={styles.loginContainer}>
       <h1 className={styles.title}>GTP ChatBot</h1>
       <input
