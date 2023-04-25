@@ -134,7 +134,8 @@ export default function Login() {
     return <Loading />;
   }
 
-  return resetPwd ? (
+  // return resetPwd ? (
+  return false ? (
     <div className={styles.loginContainer}>
       <h1 className={styles.title}>ChatGTP for Enterprise</h1>
       <input
