@@ -151,9 +151,10 @@ export default function Login() {
       />
       <input
         type="password"
-        className={styles.input}
+        className={styles.password}
         placeholder="请输入密码"
         value={pwd}
+        onKeyDown={(e) => e.key === "Enter" && handleLogin()}
         onChange={(e) => setPwd(e.target.value)}
       />
       {electron.electron ? (

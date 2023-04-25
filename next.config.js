@@ -12,7 +12,7 @@ const nextConfig = {
 
     return config;
   },
-  output: "export",
+  output: "standalone",
 };
 
 module.exports = nextConfig;
