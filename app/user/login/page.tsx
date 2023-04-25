@@ -137,7 +137,7 @@ export default function Login() {
   // return resetPwd ? (
   return false ? (
     <div className={styles.loginContainer}>
-      <h1 className={styles.title}>ChatGTP for Enterprise</h1>
+      <h1 className={styles.title}>GTP ChatBot</h1>
       <input
         type="tel"
         className={styles.input}
@@ -168,7 +168,7 @@ export default function Login() {
     </div>
   ) : (
     <div className={styles.loginContainer}>
-      <h1 className={styles.title}>ChatGTP for Enterprise</h1>
+      <h1 className={styles.title}>GTP ChatBot</h1>
       <input
         type="tel"
         className={styles.input}
@@ -177,22 +177,13 @@ export default function Login() {
         onChange={(e) => setPhone(e.target.value)}
       />
       {useLoginCode ? (
-        <div>
-          <input
-            type="tel"
-            className={styles.input}
-            placeholder="请输入验证码"
-            value={loginCode}
-            onChange={(e) => setLoginCode(e.target.value)}
-          />
-          <button
-            id="send-code"
-            className={styles.sendCode}
-            onClick={requestLoginCode}
-          >
-            发送验证码
-          </button>
-        </div>
+        <input
+          type="tel"
+          className={styles.input}
+          placeholder="请输入验证码"
+          value={loginCode}
+          onChange={(e) => setLoginCode(e.target.value)}
+        />
       ) : (
         <input
           type="password"
@@ -202,6 +193,15 @@ export default function Login() {
           onKeyDown={(e) => e.key === "Enter" && handleLogin()}
           onChange={(e) => setPwd(e.target.value)}
         />
+      )}
+      {useLoginCode && (
+        <button
+          id="send-code"
+          className={styles.loginButton}
+          onClick={requestLoginCode}
+        >
+          发送验证码
+        </button>
       )}
       {electron.electron && !useLoginCode ? (
         <div>
@@ -222,7 +222,7 @@ export default function Login() {
         登录
       </button>
       <button
-        className={styles.loginButton}
+        className={styles.switchButton}
         onClick={() => setUseLoginCode(!useLoginCode)}
       >
         {useLoginCode ? "使用密码登录" : "使用验证码登录"}

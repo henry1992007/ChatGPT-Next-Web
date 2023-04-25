@@ -46,6 +46,24 @@
   //}
 }
 
+.switchButton {
+  width: 250px;
+  //max-width: 350px;
+  padding: 10px;
+  font-size: 1rem;
+  //background-color: none;
+  background: none;
+  color: var(--primary);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    //background-color: var(--hover-color);
+  }
+}
+
 .send-code {
   margin-left: 5px;
   padding: 10px;
