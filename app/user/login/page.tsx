@@ -59,22 +59,22 @@ export default function Login() {
       if (response.ok) {
         let res = await response.json();
         if (res.success) {
-          if (res.data.defaultPwd) {
-            setResetPwd(true);
-            setLoading(false);
+          // if (res.data.defaultPwd) {
+          //   setResetPwd(true);
+          //   setLoading(false);
+          // } else {
+          if (rememberPwd) {
+            await electron.saveCredentials(phone, pwd);
+            await electron.saveData("rememberedAccount", phone);
           } else {
-            if (rememberPwd) {
-              await electron.saveCredentials(phone, pwd);
-              await electron.saveData("rememberedAccount", phone);
-            } else {
-              await electron.deleteCredentials(phone);
-              // await electron.saveData('rememberedAccount', null);
-            }
-            await electron.saveData("sessionId", res.data.sessionId);
-            Cookies.set("sessionId", res.data.sessionId);
-            window.location.href = "/";
+            await electron.deleteCredentials(phone);
+            // await electron.saveData('rememberedAccount', null);
           }
+          await electron.saveData("sessionId", res.data.sessionId);
+          Cookies.set("sessionId", res.data.sessionId);
+          window.location.href = "/";
         }
+        // }
       }
     } catch (err) {
       console.error("NetWork Error", err);
