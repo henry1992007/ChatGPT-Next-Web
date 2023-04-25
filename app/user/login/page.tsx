@@ -23,6 +23,8 @@ export default function Login() {
   const [resetPwd, setResetPwd] = useState<boolean>(false);
   const [newPwd, setNewPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
+  const [useLoginCode, setUseLoginCode] = useState<boolean>(true);
+  const [loginCode, setLoginCode] = useState<string>();
 
   useEffect(() => {
     (async () => {
@@ -51,7 +53,7 @@ export default function Login() {
           "Content-Type": "application/json",
           fp: (await (await fingerprint.load()).get()).visitorId,
         },
-        body: JSON.stringify({ phone, pwd }),
+        body: JSON.stringify({ phone, pwd, loginCode }),
       });
 
       if (response.ok) {
@@ -104,6 +106,30 @@ export default function Login() {
     }
   };
 
+  const requestLoginCode = async () => {
+    try {
+      const response = await fetch("/api/backend", {
+        method: "POST",
+        headers: {
+          path: "/user/requestLoginCode",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phone }),
+      });
+
+      if (response.ok) {
+        // setLoading(false);
+        // let res = await response.json();
+        // console.log(res);
+        // if (res.success) {
+        //   window.location.reload();
+        // }
+      }
+    } catch (err) {
+      console.error("NetWork Error", err);
+    }
+  };
+
   if (loading) {
     return <Loading />;
   }
@@ -149,15 +175,34 @@ export default function Login() {
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
       />
-      <input
-        type="password"
-        className={styles.password}
-        placeholder="请输入密码"
-        value={pwd}
-        onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-        onChange={(e) => setPwd(e.target.value)}
-      />
-      {electron.electron ? (
+      {useLoginCode ? (
+        <div>
+          <input
+            type="tel"
+            className={styles.input}
+            placeholder="请输入验证码"
+            value={loginCode}
+            onChange={(e) => setLoginCode(e.target.value)}
+          />
+          <button
+            id="send-code"
+            className={styles.sendCode}
+            onClick={requestLoginCode}
+          >
+            发送验证码
+          </button>
+        </div>
+      ) : (
+        <input
+          type="password"
+          className={styles.password}
+          placeholder="请输入密码"
+          value={pwd}
+          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+          onChange={(e) => setPwd(e.target.value)}
+        />
+      )}
+      {electron.electron && !useLoginCode ? (
         <div>
           <input
             id="exampleCheckbox"
@@ -174,6 +219,12 @@ export default function Login() {
         disabled={loading}
       >
         登录
+      </button>
+      <button
+        className={styles.loginButton}
+        onClick={() => setUseLoginCode(!useLoginCode)}
+      >
+        {useLoginCode ? "使用密码登录" : "使用验证码登录"}
       </button>
     </div>
   );
