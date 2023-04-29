@@ -72,3 +72,32 @@
   color: #fff;
   cursor: pointer;
 }
+
+.login-form {
+  max-width: 300px;
+}
+.login-form-forgot {
+  float: right;
+}
+.ant-col-rtl .login-form-forgot {
+  float: left;
+}
+.login-form-button {
+  width: 100%;
+}
+
+
+//input[type="number"],
+//input[type="text"],
+//input[type="password"] {
+//  appearance: none;
+//  border-radius: 10px;
+//  border: var(--border-in-light);
+//  //min-height: 36px;
+//  box-sizing: border-box;
+//  background: var(--white);
+//  color: var(--black);
+//  padding: 0 10px;
+//  //max-width: 50%;
+//  font-family: inherit;
+//}
