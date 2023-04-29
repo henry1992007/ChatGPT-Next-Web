@@ -264,8 +264,10 @@ export default function Login() {
               />
             </Form.Item>
             {electron.electron ? (
-              <Form.Item name="rememberPwd" valuePropName="checked" noStyle>
-                <Checkbox>记住我</Checkbox>
+              <Form.Item>
+                <Form.Item name="rememberPwd" valuePropName="checked" noStyle>
+                  <Checkbox>记住我</Checkbox>
+                </Form.Item>
               </Form.Item>
             ) : null}
             <Form.Item>
