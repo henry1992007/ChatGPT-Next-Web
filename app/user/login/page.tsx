@@ -171,6 +171,58 @@ export default function Login() {
   const items: TabsProps["items"] = [
     {
       key: "1",
+      label: `密码`,
+      children: (
+        <>
+          {/*<h1 className={styles.title}>GTP ChatBot</h1>*/}
+          <Form
+            name="normal_login"
+            className="login-form"
+            initialValues={{ rememberPwd: true }}
+            onFinish={handleLogin}
+          >
+            <Form.Item
+              name="phone"
+              rules={[{ required: true, message: "请输入手机号" }]}
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="手机号"
+              />
+            </Form.Item>
+            <Form.Item
+              name="pwd"
+              rules={[{ required: true, message: "请输入密码" }]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="密码"
+              />
+            </Form.Item>
+            {electron.electron ? (
+              <Form.Item>
+                <Form.Item name="rememberPwd" valuePropName="checked" noStyle>
+                  <Checkbox>记住我</Checkbox>
+                </Form.Item>
+              </Form.Item>
+            ) : null}
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loginLoading}
+                style={{ width: "100%" }}
+              >
+                登录
+              </Button>
+            </Form.Item>
+          </Form>
+        </>
+      ),
+    },
+    {
+      key: "2",
       label: `验证码`,
       children: (
         <>
@@ -218,58 +270,6 @@ export default function Login() {
                   : "获取验证码"}
               </Button>
             </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loginLoading}
-                style={{ width: "100%" }}
-              >
-                登录
-              </Button>
-            </Form.Item>
-          </Form>
-        </>
-      ),
-    },
-    {
-      key: "2",
-      label: `密码`,
-      children: (
-        <>
-          {/*<h1 className={styles.title}>GTP ChatBot</h1>*/}
-          <Form
-            name="normal_login"
-            className="login-form"
-            initialValues={{ rememberPwd: true }}
-            onFinish={handleLogin}
-          >
-            <Form.Item
-              name="phone"
-              rules={[{ required: true, message: "请输入手机号" }]}
-            >
-              <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="手机号"
-              />
-            </Form.Item>
-            <Form.Item
-              name="pwd"
-              rules={[{ required: true, message: "请输入密码" }]}
-            >
-              <Input
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                placeholder="密码"
-              />
-            </Form.Item>
-            {electron.electron ? (
-              <Form.Item>
-                <Form.Item name="rememberPwd" valuePropName="checked" noStyle>
-                  <Checkbox>记住我</Checkbox>
-                </Form.Item>
-              </Form.Item>
-            ) : null}
             <Form.Item>
               <Button
                 type="primary"
