@@ -84,11 +84,17 @@ export function My() {
       ) : (
         <div className={styles["settings"]}>
           <List>
+            <ListItem title={"用户名"}>
+              <span>{profile.userName}</span>
+            </ListItem>
+            <ListItem title={"手机号"}>
+              <span>{profile.phone}</span>
+            </ListItem>
             <ListItem
               title={"我的等级"}
-              subTitle={"到期：" + profile?.subscriptionExpire}
+              subTitle={"到期：" + profile.subscriptionExpire}
             >
-              <span>{profile?.subscriptionDesc}</span>
+              <span>{profile.subscriptionDesc}</span>
             </ListItem>
           </List>
         </div>
