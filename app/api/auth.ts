@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import md5 from "spark-md5";
 import { ACCESS_CODE_PREFIX } from "../constant";
-import { proxy } from "./proxyBackend";
+import { proxy, proxy1 } from "./proxyBackend";
 
 const serverConfig = getServerSideConfig();
 
@@ -41,6 +41,14 @@ export async function auth(req: NextRequest) {
   });
 
   const checkLoginReqResponse = await proxy(checkLoginReq);
+  // const checkLoginReqResponse = await proxy1({
+  //   path: "/user/checkLogin",
+  //   cookie: req.headers.get("Cookie") || "",
+  //   fp: req.headers.get("fp") || "",
+  //   action: new URL(req.url).pathname,
+  //   method: "POST",
+  //   body: null
+  // });
   const resp = !checkLoginReqResponse.ok
     ? {}
     : await checkLoginReqResponse.json();

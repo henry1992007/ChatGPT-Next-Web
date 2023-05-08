@@ -20,8 +20,43 @@ export async function proxy(req: NextRequest) {
   });
 }
 
-async function readStream(stream: ReadableStream<Uint8Array> | null) {
-  if (stream == null) {
+export async function proxy1({
+  path = "",
+  cookie = "",
+  fp = "",
+  action = "",
+  method,
+  body,
+}: {
+  path: string;
+  cookie?: string;
+  fp: string;
+  action?: string;
+  method: string;
+  body?: ReadableStream<Uint8Array> | null;
+}) {
+  path = path?.startsWith("/") ? path : "/" + path;
+  path += path.indexOf("?") > -1 ? "&t=" + Date.now() : "?t=" + Date.now();
+
+  let bodyStr = await readStream(body);
+
+  // return fetch(`http://172.31.4.115:7817${path}`, {
+  return fetch(`http://127.0.0.1:7817${path}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookie,
+      fp: fp,
+      action: action,
+    },
+    method: method,
+    body: bodyStr,
+  });
+}
+
+async function readStream(
+  stream: ReadableStream<Uint8Array> | null | undefined,
+) {
+  if (stream == null || typeof stream === "undefined") {
     return null;
   }
 

@@ -56,6 +56,14 @@
   }
 }
 
+.list-item-click {
+  @extend .list-item;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .list {
   border: var(--border-in-light);
   border-radius: 10px;
@@ -143,7 +151,7 @@
 
 .toast-container {
   position: fixed;
-  bottom: 5vh;
+  bottom: 90vh;
   left: 0;
   width: 100vw;
   display: flex;

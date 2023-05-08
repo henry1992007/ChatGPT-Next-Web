@@ -6,6 +6,7 @@ import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Tabs } from "antd";
 import type { TabsProps } from "antd";
+import { showToast } from "../../components/ui-lib";
 
 const Cookies = require("js-cookie");
 
@@ -93,12 +94,16 @@ export default function Login() {
           await electron.saveData("sessionId", res.data.sessionId);
           Cookies.set("sessionId", res.data.sessionId);
           window.location.href = "/";
+        } else {
+          showToast(res.msg);
         }
         // }
       }
     } catch (err) {
-      console.error("NetWork Error", err);
+      showToast("网络错误");
     }
+
+    setLoginLoading(false);
   };
 
   const handleChangePwd = async ({
@@ -212,7 +217,7 @@ export default function Login() {
                 type="primary"
                 htmlType="submit"
                 loading={loginLoading}
-                style={{ width: "100%" }}
+                style={{ width: "100%", background: "var(--primary)" }}
               >
                 登录
               </Button>
@@ -321,7 +326,7 @@ export default function Login() {
   // ) : (
   //   <>
   //     {/*<h1 className={styles.title}>GTP ChatBot</h1>*/}
-  return <Tabs defaultActiveKey="1" items={items} />;
+  return <Tabs defaultActiveKey="1" items={items} style={{ color: "" }} />;
   // {/*</>*/}
   // );
 }
