@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, HTMLProps, useRef } from "react";
 
-import styles from "./settings.module.scss";
+import styles from "./my.module.scss";
 
 import ResetIcon from "../icons/reload.svg";
 import AddIcon from "../icons/add.svg";
@@ -11,8 +11,6 @@ import EditIcon from "../icons/edit.svg";
 import EyeIcon from "../icons/eye.svg";
 import { Input, List, ListItem, Modal, PasswordInput, Popover } from "./ui-lib";
 import { ModelConfigList } from "./model-config";
-import ConfirmModal from "./confirmModal";
-import { proxy, proxy1 } from "../api/proxyBackend";
 
 import { IconButton } from "./button";
 import {
@@ -22,8 +20,6 @@ import {
   useUpdateStore,
   useAccessStore,
   useAppConfig,
-  ModalConfigValidator,
-  ALL_MODELS,
 } from "../store";
 
 import Locale, { AllLangs, changeLang, getLang } from "../locales";
@@ -35,8 +31,6 @@ import { ErrorBoundary } from "./error";
 import { InputRange } from "./input-range";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarPicker } from "./emoji";
-import { NextRequest } from "next/server";
-import fingerprint from "@fingerprintjs/fingerprintjs";
 
 function EditPromptModal(props: { id: number; onClose: () => void }) {
   const promptStore = usePromptStore();
@@ -202,7 +196,7 @@ function formatVersionDate(t: string) {
   ].join("");
 }
 
-export function Settings() {
+export function My() {
   const navigate = useNavigate();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const config = useAppConfig();
@@ -237,7 +231,6 @@ export function Settings() {
     subscription: updateStore.subscription,
   };
   const [loadingUsage, setLoadingUsage] = useState(false);
-
   function checkUsage(force = false) {
     setLoadingUsage(true);
     updateStore.updateUsage(force).finally(() => {
@@ -256,7 +249,6 @@ export function Settings() {
   const builtinCount = SearchService.count.builtin;
   const customCount = promptStore.getUserPrompts().length ?? 0;
   const [shouldShowPromptModal, setShowPromptModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState<boolean>(false);
 
   const showUsage = accessStore.isAuthorized();
   useEffect(() => {
@@ -283,38 +275,9 @@ export function Settings() {
     <ErrorBoundary>
       <div className="window-header">
         <div className="window-header-title">
-          <div className="window-header-main-title">
-            {Locale.Settings.Title}
-          </div>
-          <div className="window-header-sub-title">
-            {Locale.Settings.SubTitle}
-          </div>
+          <div className="window-header-main-title">{Locale.My.Title}</div>
         </div>
         <div className="window-actions">
-          <div className="window-action-button">
-            <IconButton
-              icon={<ClearIcon />}
-              onClick={() => {
-                if (confirm(Locale.Settings.Actions.ConfirmClearAll)) {
-                  chatStore.clearAllData();
-                }
-              }}
-              bordered
-              title={Locale.Settings.Actions.ClearAll}
-            />
-          </div>
-          <div className="window-action-button">
-            <IconButton
-              icon={<ResetIcon />}
-              onClick={() => {
-                if (confirm(Locale.Settings.Actions.ConfirmResetAll)) {
-                  resetConfig();
-                }
-              }}
-              bordered
-              title={Locale.Settings.Actions.ResetAll}
-            />
-          </div>
           <div className="window-action-button">
             <IconButton
               icon={<CloseIcon />}
@@ -582,31 +545,6 @@ export function Settings() {
 
         {shouldShowPromptModal && (
           <UserPromptModal onClose={() => setShowPromptModal(false)} />
-        )}
-
-        <List>
-          <ListItem
-            title={Locale.Settings.Logout}
-            onClick={() => setShowLogoutModal(true)}
-          ></ListItem>
-        </List>
-        {showLogoutModal && (
-          <ConfirmModal
-            onOk={() => {
-              (async () => {
-                await fetch("/api/backend", {
-                  method: "POST",
-                  headers: {
-                    path: "user/logout",
-                    "Content-Type": "application/json",
-                    fp: (await (await fingerprint.load()).get()).visitorId,
-                  },
-                });
-                window.location.href = "/user/login"; // 重定向到登录URL
-              })();
-            }}
-            onClose={() => setShowLogoutModal(false)}
-          />
         )}
       </div>
     </ErrorBoundary>

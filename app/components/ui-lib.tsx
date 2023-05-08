@@ -39,9 +39,16 @@ export function ListItem(props: {
   children?: JSX.Element | JSX.Element[];
   icon?: JSX.Element;
   className?: string;
+  onClick?: Function;
 }) {
   return (
-    <div className={styles["list-item"] + ` ${props.className}`}>
+    <div
+      className={
+        styles[props.onClick == null ? "list-item" : "list-item-click"] +
+        ` ${props.className}`
+      }
+      onClick={() => props.onClick?.()}
+    >
       <div className={styles["list-header"]}>
         {props.icon && <div className={styles["list-icon"]}>{props.icon}</div>}
         <div className={styles["list-item-title"]}>
