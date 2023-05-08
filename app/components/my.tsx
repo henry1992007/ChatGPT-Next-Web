@@ -66,7 +66,7 @@ export function My() {
     <ErrorBoundary>
       <div className="window-header">
         <div className="window-header-title">
-          <div className="window-header-main-title">{Locale.My.Title}</div>
+          <div className="window-header-main-title">{"我的"}</div>
         </div>
         <div className="window-actions">
           <div className="window-action-button">

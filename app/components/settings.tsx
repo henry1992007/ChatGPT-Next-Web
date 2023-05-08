@@ -587,7 +587,7 @@ export function Settings() {
 
         <List>
           <ListItem
-            title={Locale.Settings.Logout}
+            title={"退出登录"}
             onClick={() => setShowLogoutModal(true)}
           ></ListItem>
         </List>
