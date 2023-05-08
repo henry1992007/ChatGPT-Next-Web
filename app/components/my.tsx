@@ -41,7 +41,7 @@ export function My() {
           setProfile(res.data);
           setLoading(false);
         } else {
-          showToast("res.msg");
+          showToast(res.msg);
         }
       } else {
         showToast("网络错误");
