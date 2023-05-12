@@ -7,6 +7,7 @@ export function IconButton(props: {
   icon?: JSX.Element;
   type?: "primary" | "danger";
   text?: string;
+  textSize?: number;
   bordered?: boolean;
   shadow?: boolean;
   className?: string;
@@ -38,7 +39,12 @@ export function IconButton(props: {
       )}
 
       {props.text && (
-        <div className={styles["icon-button-text"]}>{props.text}</div>
+        <div
+          className={styles["icon-button-text"]}
+          style={props.textSize ? { fontSize: props.textSize } : {}}
+        >
+          {props.text}
+        </div>
       )}
     </button>
   );
