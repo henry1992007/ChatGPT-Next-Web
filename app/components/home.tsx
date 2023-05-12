@@ -28,6 +28,7 @@ import {
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
 import electron from "@/app/electron";
+import { useMaskStore } from "../store/mask";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
