@@ -137,7 +137,6 @@ export function My() {
 }
 
 function UpgradeModal(props: {
-  id: number;
   onClose: () => void;
   showPayModal: () => void;
 }) {
@@ -248,7 +247,7 @@ function UpgradeModal(props: {
   );
 }
 
-function PayModal(props: { id: number; onClose: () => void }) {
+function PayModal(props: { onClose: () => void }) {
   const [selectedPay, setSelectedPay] = useState("alipay");
 
   return (
