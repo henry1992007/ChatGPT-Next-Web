@@ -29,7 +29,6 @@ export function My() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState<boolean>(false);
-  const [showPayModal, setShowPayModal] = useState<boolean>(false);
   const [profile, setProfile] = useState<{
     phone?: string;
     userName?: string;
@@ -126,20 +125,13 @@ export function My() {
       )}
 
       {showUpgradeModal && (
-        <UpgradeModal
-          showPayModal={() => setShowPayModal(true)}
-          onClose={() => setShowUpgradeModal(false)}
-        />
+        <UpgradeModal onClose={() => setShowUpgradeModal(false)} />
       )}
-      {showPayModal && <PayModal onClose={() => setShowPayModal(false)} />}
     </ErrorBoundary>
   );
 }
 
-function UpgradeModal(props: {
-  onClose: () => void;
-  showPayModal: () => void;
-}) {
+function UpgradeModal(props: { onClose: () => void }) {
   const lv1Plan = [
     {
       name: "月度 19¥/月",
@@ -165,6 +157,7 @@ function UpgradeModal(props: {
   ];
   const [selectedPlan, setSelectedPlan] = useState(lv1Plan[2]);
   const [editingPromptId, setEditingPromptId] = useState<number>();
+  const [showPayModal, setShowPayModal] = useState<boolean>(false);
 
   return (
     <div className="modal-mask">
@@ -177,7 +170,7 @@ function UpgradeModal(props: {
           </span>,
           <IconButton
             key="add"
-            onClick={props.showPayModal}
+            onClick={() => setShowPayModal(true)}
             icon={<PurchaseIcon />}
             bordered
             text={"购买"}
@@ -243,12 +236,33 @@ function UpgradeModal(props: {
       {/*    onClose={() => setEditingPromptId(undefined)}*/}
       {/*  />*/}
       {/*)}*/}
+
+      {showPayModal && (
+        <PayModal
+          onClose={() => setShowPayModal(false)}
+          selectedPlan={selectedPlan}
+        />
+      )}
     </div>
   );
 }
 
-function PayModal(props: { onClose: () => void }) {
+function PayModal(props: { selectedPlan: any; onClose: () => void }) {
   const [selectedPay, setSelectedPay] = useState("alipay");
+  const pay = async () =>
+    await fetch("/api/backend", {
+      method: "POST",
+      headers: {
+        path: "/order/create",
+        "Content-Type": "application/json",
+        fp: (await (await fingerprint.load()).get()).visitorId,
+      },
+      body: JSON.stringify({
+        productCode: props.selectedPlan.code,
+        channel: selectedPay,
+        clientType: 2,
+      }),
+    });
 
   return (
     <div className="modal-mask">
@@ -258,7 +272,7 @@ function PayModal(props: { onClose: () => void }) {
         actions={[
           <IconButton
             key="add"
-            onClick={() => {}}
+            onClick={() => pay()}
             icon={<PurchaseIcon />}
             bordered
             text={"支付"}
