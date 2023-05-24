@@ -74,10 +74,6 @@ export async function auth(req: NextRequest) {
       req.headers.set("Authorization", `Bearer ${apiKey}`);
     } else {
       console.log("[Auth] admin did not provide an api key");
-      return {
-        error: serverConfig.baseUrl?.includes(OPENAI_URL),
-        msg: "admin did not provide an api key",
-      };
     }
   } else {
     console.log("[Auth] use user api key");
