@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import md5 from "spark-md5";
 import { ACCESS_CODE_PREFIX } from "../constant";
-import { proxy, proxy1 } from "./proxyBackend";
-
-const serverConfig = getServerSideConfig();
+import { proxy } from "./proxyBackend";
+import { OPENAI_URL } from "./common";
 
 function getIP(req: NextRequest) {
   let ip = req.ip ?? req.headers.get("x-real-ip");
@@ -28,27 +27,14 @@ function parseApiKey(bearToken: string) {
 }
 
 export async function auth(req: NextRequest) {
-  const checkLoginReq = new NextRequest(req.url, {
-    body: "",
+  const checkLoginReqResponse = await proxy({
+    path: "/user/checkLogin",
+    cookie: req.headers.get("Cookie") || "",
+    fp: req.headers.get("fp") || "",
+    action: new URL(req.url).pathname,
     method: "POST",
-    headers: {
-      path: "/user/checkLogin",
-      "Content-Type": "application/json",
-      Cookie: req.headers.get("Cookie") || "",
-      fp: req.headers.get("fp") || "",
-      action: new URL(req.url).pathname,
-    },
+    body: null,
   });
-
-  const checkLoginReqResponse = await proxy(checkLoginReq);
-  // const checkLoginReqResponse = await proxy1({
-  //   path: "/user/checkLogin",
-  //   cookie: req.headers.get("Cookie") || "",
-  //   fp: req.headers.get("fp") || "",
-  //   action: new URL(req.url).pathname,
-  //   method: "POST",
-  //   body: null
-  // });
   const resp = !checkLoginReqResponse.ok
     ? {}
     : await checkLoginReqResponse.json();
@@ -66,6 +52,7 @@ export async function auth(req: NextRequest) {
 
   const hashedCode = md5.hash(accessCode ?? "").trim();
 
+  const serverConfig = getServerSideConfig();
   console.log("[Auth] allowed hashed codes: ", [...serverConfig.codes]);
   console.log("[Auth] got access code:", accessCode);
   console.log("[Auth] hashed access code:", hashedCode);
@@ -75,8 +62,7 @@ export async function auth(req: NextRequest) {
   if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !token) {
     return {
       error: true,
-      needAccessCode: true,
-      msg: "Please go settings page and fill your access code.",
+      msg: !accessCode ? "empty access code" : "wrong access code",
     };
   }
 
@@ -88,10 +74,6 @@ export async function auth(req: NextRequest) {
       req.headers.set("Authorization", `Bearer ${apiKey}`);
     } else {
       console.log("[Auth] admin did not provide an api key");
-      return {
-        error: true,
-        msg: "Empty Api Key",
-      };
     }
   } else {
     console.log("[Auth] use user api key");
