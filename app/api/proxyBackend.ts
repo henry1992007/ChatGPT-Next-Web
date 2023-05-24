@@ -1,25 +1,3 @@
-import { NextRequest } from "next/server";
-
-export async function proxyx(req: NextRequest) {
-  const serverPath = req.headers.get("path");
-  let path = serverPath?.startsWith("/") ? serverPath : "/" + serverPath;
-  path += path.indexOf("?") > -1 ? "&t=" + Date.now() : "?t=" + Date.now();
-
-  let bodyStr = await readStream(req.body);
-
-  return fetch(`http://54.241.90.46:7817${path}`, {
-    // return fetch(`http://127.0.0.1:7817${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: req.headers.get("Cookie") || "",
-      fp: req.headers.get("fp") || "",
-      action: req.headers.get("action") || "",
-    },
-    method: req.method,
-    body: bodyStr,
-  });
-}
-
 export async function proxy({
   path = "",
   cookie = "",
