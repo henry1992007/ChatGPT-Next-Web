@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import md5 from "spark-md5";
 import { ACCESS_CODE_PREFIX } from "../constant";
-import { proxy, proxy1 } from "./proxyBackend";
+import { proxy } from "./proxyBackend";
 import { OPENAI_URL } from "./common";
 
 function getIP(req: NextRequest) {
@@ -27,27 +27,14 @@ function parseApiKey(bearToken: string) {
 }
 
 export async function auth(req: NextRequest) {
-  const checkLoginReq = new NextRequest(req.url, {
-    body: "",
+  const checkLoginReqResponse = await proxy({
+    path: "/user/checkLogin",
+    cookie: req.headers.get("Cookie") || "",
+    fp: req.headers.get("fp") || "",
+    action: new URL(req.url).pathname,
     method: "POST",
-    headers: {
-      path: "/user/checkLogin",
-      "Content-Type": "application/json",
-      Cookie: req.headers.get("Cookie") || "",
-      fp: req.headers.get("fp") || "",
-      action: new URL(req.url).pathname,
-    },
+    body: null,
   });
-
-  const checkLoginReqResponse = await proxy(checkLoginReq);
-  // const checkLoginReqResponse = await proxy1({
-  //   path: "/user/checkLogin",
-  //   cookie: req.headers.get("Cookie") || "",
-  //   fp: req.headers.get("fp") || "",
-  //   action: new URL(req.url).pathname,
-  //   method: "POST",
-  //   body: null
-  // });
   const resp = !checkLoginReqResponse.ok
     ? {}
     : await checkLoginReqResponse.json();

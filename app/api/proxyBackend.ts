@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-export async function proxy(req: NextRequest) {
+export async function proxyx(req: NextRequest) {
   const serverPath = req.headers.get("path");
   let path = serverPath?.startsWith("/") ? serverPath : "/" + serverPath;
   path += path.indexOf("?") > -1 ? "&t=" + Date.now() : "?t=" + Date.now();
@@ -20,7 +20,7 @@ export async function proxy(req: NextRequest) {
   });
 }
 
-export async function proxy1({
+export async function proxy({
   path = "",
   cookie = "",
   fp = "",

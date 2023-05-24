@@ -63,7 +63,7 @@ export class ChatGPTApi implements LLMApi {
         signal: controller.signal,
         headers: {
           "Content-Type": "application/json",
-          path,
+          path: chatPath,
           ...getHeaders(),
           fp: (await (await fingerprint.load()).get()).visitorId,
         },
@@ -110,7 +110,7 @@ export class ChatGPTApi implements LLMApi {
                 ?.startsWith(EventStreamContentType) ||
               res.status !== 200
             ) {
-              const responseTexts = [responseText];
+              let responseTexts = [responseText];
               let extraInfo = await res.clone().text();
               try {
                 const resJson = await res.clone().json();
@@ -118,10 +118,11 @@ export class ChatGPTApi implements LLMApi {
               } catch {}
 
               if (res.status === 401) {
-                responseTexts.push(Locale.Error.Unauthorized);
-              }
-
-              if (extraInfo) {
+                window.location.href = "/user/login";
+                return;
+              } else if (res.status === 402) {
+                responseTexts = [(await res.clone().json()).msg];
+              } else if (extraInfo) {
                 responseTexts.push(extraInfo);
               }
 
@@ -186,12 +187,20 @@ export class ChatGPTApi implements LLMApi {
         ),
         {
           method: "GET",
-          headers: getHeaders(),
+          headers: {
+            path: this.SubsPath,
+            ...getHeaders(),
+            fp: (await (await fingerprint.load()).get()).visitorId,
+          },
         },
       ),
       fetch(this.path(this.SubsPath), {
         method: "GET",
-        headers: getHeaders(),
+        headers: {
+          path: this.SubsPath,
+          ...getHeaders(),
+          fp: (await (await fingerprint.load()).get()).visitorId,
+        },
       }),
     ]);
 

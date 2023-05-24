@@ -21,7 +21,6 @@ import {
 } from "./ui-lib";
 import { ModelConfigList } from "./model-config";
 import ConfirmModal from "./confirmModal";
-import { proxy, proxy1 } from "../api/proxyBackend";
 
 import { IconButton } from "./button";
 import {

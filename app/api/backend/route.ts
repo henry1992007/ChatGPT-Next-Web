@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { proxy, proxy1 } from "../proxyBackend";
+import { proxy } from "../proxyBackend";
 
 async function makeRequest(req: NextRequest) {
   try {
-    const proxyResult = await proxy(req);
-    // const proxyResult = await proxy1({
-    //   path: req.headers.get("path") || "",
-    //   cookie: req.headers.get("Cookie") || "",
-    //   fp: req.headers.get("fp") || "",
-    //   action: new URL(req.url).pathname,
-    //   method: req.method,
-    //   body: req.body
-    // });
+    const proxyResult = await proxy({
+      path: req.headers.get("path") || "",
+      cookie: req.headers.get("Cookie") || "",
+      fp: req.headers.get("fp") || "",
+      action: new URL(req.url).pathname,
+      method: req.method,
+      body: req.body,
+    });
 
     const res = new NextResponse(proxyResult.body);
     res.headers.set("Content-Type", "application/json");

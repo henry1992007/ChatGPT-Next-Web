@@ -292,20 +292,11 @@ export const useChatStore = create<ChatStore>()(
             set(() => ({}));
           },
           onError(error) {
-            const statusCode = error.code;
             const isAborted = error.message.includes("aborted");
             if (
               botMessage.content !== Locale.Error.Unauthorized &&
               !isAborted
             ) {
-              botMessage.content += "\n\n" + prettyObject(error);
-            }
-            if (statusCode === 401) {
-              botMessage.content = "\n";
-            } else if (statusCode === 402) {
-              botMessage.content +=
-                "\n\n体验账号目前限制每小时15条消息，先歇会儿吧~";
-            } else if (!isAborted) {
               botMessage.content += "\n\n" + prettyObject(error);
             }
             botMessage.streaming = false;
@@ -317,9 +308,6 @@ export const useChatStore = create<ChatStore>()(
               sessionIndex,
               botMessage.id ?? messageIndex,
             );
-            if (statusCode === 401) {
-              window.location.href = "/user/login";
-            }
 
             console.error("[Chat] error ", error);
           },
@@ -494,9 +482,6 @@ export const useChatStore = create<ChatStore>()(
             },
             onError(err) {
               console.error("[Summarize] ", err);
-              if (err.statusCode === 401) {
-                window.location.href = "/user/login";
-              }
             },
           });
         }
