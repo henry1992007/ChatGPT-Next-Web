@@ -46,7 +46,7 @@ export function ListItem(props: {
     <div
       className={
         styles[props.onClick == null ? "list-item" : "list-item-click"] +
-        ` ${props.className}`
+        ` ${props.className || ""}`
       }
       onClick={() => props.onClick?.()}
     >
